@@ -1,10 +1,22 @@
 import os
 import sys
-from src.pipeline import run_pipeline, run_eval_on_dataset
+import dspy
+from src.pipeline import compile, run, eval_dataset
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+dspy.configure(lm=dspy.LM("anthropic/claude-sonnet-4-6", api_key=GEMINI_API_KEY))
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        prompt = " ".join(sys.argv[1:])
-        run_pipeline(prompt, save_skill=True)
-    else:
-        run_eval_on_dataset("transit-skill-prompts")
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "help"
+
+    if cmd == "compile":
+        compile()
+    elif cmd == "run":
+        prompt = " ".join(sys.argv[2:])
+        run(prompt)
+    elif cmd == "eval":
+        eval_dataset()

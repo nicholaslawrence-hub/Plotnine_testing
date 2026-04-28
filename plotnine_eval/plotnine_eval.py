@@ -21,6 +21,7 @@ import json
 import subprocess 
 from pathlib import Path
 
+
 client = anthropic.Anthropic()
 
 PLOTNINE_SYSTEM = """You are a Python data visualization expert specializing in the Python visualization library plotnine, developed by Posit.
