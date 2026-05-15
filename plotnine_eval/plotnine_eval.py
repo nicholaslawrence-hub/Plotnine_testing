@@ -27,12 +27,14 @@ try:
     from .llm_judge import JUDGE_RUBRIC, judge_code, judge_image, require_judge_key
     from .few_shot_examples import format_few_shot_examples
     from .dspy_optimizer import COMPILED_DSPY_PATH, PlotnineCodeGenerator, compile_program
+    from .project_profile import load_project_profile
 except ImportError:
     from graph_context import build_graph_context
     from image_eval import evaluate_image
     from llm_judge import JUDGE_RUBRIC, judge_code, judge_image, require_judge_key
     from few_shot_examples import format_few_shot_examples
     from dspy_optimizer import COMPILED_DSPY_PATH, PlotnineCodeGenerator, compile_program
+    from project_profile import load_project_profile
 
 import dspy
 
@@ -148,11 +150,13 @@ def run_code(code: str, timeout: int = 45) -> RunResult:
 
 def build_system_prompt(graph_context: dict | None = None, variant: str = "graph") -> str:
     appendix = PROMPT_VARIANTS.get(variant, PROMPT_VARIANTS["graph"])
+    project_profile = load_project_profile()
     if not graph_context or variant == "baseline":
-        return f"{PLOTNINE_SYSTEM}\n{appendix}".strip()
+        return f"{PLOTNINE_SYSTEM}\n\nProject profile:\n{project_profile}\n\n{appendix}".strip()
 
     return (
         f"{PLOTNINE_SYSTEM}\n\n"
+        f"Project profile:\n{project_profile}\n\n"
         f"{appendix}\n\n"
         f"Few-shot examples:\n{format_few_shot_examples()}\n\n"
         f"Judge rubric:\n{JUDGE_RUBRIC}\n\n"
@@ -192,7 +196,11 @@ def ask_dspy(prompt: str, graph_context: dict) -> str:
     generator = PlotnineCodeGenerator()
     if COMPILED_DSPY_PATH.exists():
         generator.load(str(COMPILED_DSPY_PATH))
-    result = generator(task_prompt=prompt, graph_context=graph_context["context"])
+    result = generator(
+        task_prompt=prompt,
+        graph_context=graph_context["context"],
+        project_profile=load_project_profile(),
+    )
     return extract_code(result.code)
 
 
@@ -349,13 +357,13 @@ def evaluate_generated_code(case: EvalCase, code: str, graph_context: dict, prom
     check_results.append(CheckResult(name="image_nonblank", passed=passed, detail=detail))
 
     summary = [{"name": c.name, "passed": c.passed, "detail": c.detail} for c in check_results]
-    llm_result = judge_code(case.prompt, code, graph_context["active_nodes"], summary)
+    llm_result = judge_code(case.prompt, code, graph_context["active_nodes"], summary, load_project_profile())
     passed, detail = check_llm_judge_result(llm_result)(code, run_result.returncode, run_result.stdout, run_result.stderr)
     check_results.append(CheckResult(name="llm_judge", passed=passed, detail=detail))
 
     vision_result = None
     if image_info.exists and image_info.passed:
-        vision_result = judge_image(case.prompt, run_result.output_path, graph_context["active_nodes"])
+        vision_result = judge_image(case.prompt, run_result.output_path, graph_context["active_nodes"], load_project_profile())
         passed, detail = check_vision_judge_result(vision_result)(code, run_result.returncode, run_result.stdout, run_result.stderr)
         check_results.append(CheckResult(name="vision_judge", passed=passed, detail=detail))
     else:

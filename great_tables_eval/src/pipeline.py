@@ -2,6 +2,7 @@ import os
 from langsmith import Client
 import dspy
 from dspy.teleprompt import MIPROv2
+from pathlib import Path
 
 
 client = Client(api_key=os.getenv("LANGCHAIN_API_KEY")) if os.getenv("LANGCHAIN_API_KEY") else None
@@ -9,6 +10,17 @@ client = Client(api_key=os.getenv("LANGCHAIN_API_KEY")) if os.getenv("LANGCHAIN_
 COMPILED_PATH = "optimized_skill_generator.json"
 SKILL_OUTPUT = "skills/transit_table/SKILL.md"
 SCORE_THRESHOLD = 0.7
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_PROFILE_PATH = PROJECT_ROOT / ".claude" / "skills" / "posit-project-profile" / "SKILL.md"
+
+
+def load_project_profile(max_chars: int = 5000) -> str:
+    if not PROJECT_PROFILE_PATH.exists():
+        return ""
+    text = PROJECT_PROFILE_PATH.read_text(encoding="utf-8").strip()
+    if len(text) > max_chars:
+        text = text[:max_chars].rsplit("\n", 1)[0] + "\n\n[project profile truncated]"
+    return text
 
 
 NOTEBOOK_CONTEXT = """
@@ -75,6 +87,7 @@ class GenerateSkill(dspy.Signature):
  
     user_prompt: str = dspy.InputField(desc="Specifics regarding timetable construction from GT")
     notebook_context: str = dspy.InputField(desc="Reference implementation from a working notebook")
+    project_profile: str = dspy.InputField(desc="Project purpose, aesthetic, and success criteria for reusable agent skills")
     skill_template: str = dspy.InputField(desc='Template for skill.md output')
     skill_md: str = dspy.OutputField(desc="Complete SKILL.md with description, dependencies, common failure modes, and a working code example using styled Great Tables")
 
@@ -84,6 +97,7 @@ class JudgeSkill(dspy.Signature):
     Return a float score between 0.0 and 1.0."""
  
     user_prompt: str = dspy.InputField()
+    project_profile: str = dspy.InputField()
     skill_md: str = dspy.InputField()
     score: float = dspy.OutputField(desc="Composite quality score between 0.0 and 1.0")
     reasoning: str = dspy.OutputField(desc="Brief explanation covering correctness, coverage, trigger accuracy, conciseness, timetable faithfulness")
@@ -98,7 +112,8 @@ class SkillGenerator(dspy.Module):
         return self.generate(
             user_prompt=user_prompt,
             skill_template=SKILL_TEMPLATE,
-            notebook_context=NOTEBOOK_CONTEXT
+            notebook_context=NOTEBOOK_CONTEXT,
+            project_profile=load_project_profile(),
         )
  
 class SkillJudge(dspy.Module):
@@ -106,7 +121,7 @@ class SkillJudge(dspy.Module):
         self.judge = dspy.ChainOfThought(JudgeSkill)
  
     def forward(self, user_prompt, skill_md):
-        return self.judge(user_prompt=user_prompt, skill_md=skill_md)
+        return self.judge(user_prompt=user_prompt, project_profile=load_project_profile(), skill_md=skill_md)
 
 _judge = SkillJudge()
 

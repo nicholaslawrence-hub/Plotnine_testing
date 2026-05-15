@@ -19,7 +19,10 @@
     {"id": "primitive-line", "type": "primitive", "file": "graph/nodes/primitive-line.md"},
     {"id": "primitive-smooth", "type": "primitive", "file": "graph/nodes/primitive-smooth.md"},
     {"id": "output-save", "type": "output", "file": "graph/nodes/output-save.md"},
-    {"id": "grader-plotnine-eval", "type": "grader", "file": "graph/nodes/grader-plotnine-eval.md"}
+    {"id": "grader-plotnine-eval", "type": "grader", "file": "graph/nodes/grader-plotnine-eval.md"},
+    {"id": "example-scatter-trend", "type": "example", "file": "graph/nodes/example-scatter-trend.md"},
+    {"id": "example-bar-percent-labels", "type": "example", "file": "graph/nodes/example-bar-percent-labels.md"},
+    {"id": "example-faceted-histogram", "type": "example", "file": "graph/nodes/example-faceted-histogram.md"}
   ],
   "edges": [
     {"from": "intent-relationship", "to": "primitive-point", "type": "maps_to"},
@@ -61,7 +64,15 @@
     {"from": "layer-stat-computed-labels", "to": "grader-plotnine-eval", "type": "graded_by"},
     {"from": "layer-facets", "to": "grader-plotnine-eval", "type": "graded_by"},
     {"from": "layer-labels-theme", "to": "grader-plotnine-eval", "type": "graded_by"},
-    {"from": "output-save", "to": "grader-plotnine-eval", "type": "graded_by"}
+    {"from": "output-save", "to": "grader-plotnine-eval", "type": "graded_by"},
+    {"from": "intent-relationship", "to": "example-scatter-trend", "type": "exemplified_by"},
+    {"from": "primitive-point", "to": "example-scatter-trend", "type": "exemplified_by"},
+    {"from": "primitive-smooth", "to": "example-scatter-trend", "type": "exemplified_by"},
+    {"from": "intent-counts", "to": "example-bar-percent-labels", "type": "exemplified_by"},
+    {"from": "primitive-bar", "to": "example-bar-percent-labels", "type": "exemplified_by"},
+    {"from": "layer-stat-computed-labels", "to": "example-bar-percent-labels", "type": "exemplified_by"},
+    {"from": "intent-distribution", "to": "example-faceted-histogram", "type": "exemplified_by"},
+    {"from": "primitive-histogram", "to": "example-faceted-histogram", "type": "exemplified_by"},
+    {"from": "layer-facets", "to": "example-faceted-histogram", "type": "exemplified_by"}
   ]
 }
-

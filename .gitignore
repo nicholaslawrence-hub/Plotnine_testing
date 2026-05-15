@@ -1,0 +1,30 @@
+# Local secrets and environment config
+.env
+.env.*
+config.env
+*.key
+*.pem
+
+# Python caches and local test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Eval reports and generated optimization artifacts
+eval_report.json
+plotnine_eval_report.json
+plotnine_prompt_optimization_report.json
+plotnine_skill_rewrite_proposals.json
+output.png
+optimized_skill_generator.json
+compiled_plotnine_program.json
+compiled_skill_rewriter.json
+
+# Generated skills produced by eval runs
+skills/
+great_tables_eval/skills/
+
+# Local notebooks and checkpoint noise
+.ipynb_checkpoints/

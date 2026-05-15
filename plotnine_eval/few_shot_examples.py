@@ -11,6 +11,7 @@ FEW_SHOT_EXAMPLES = [
             "layer-labels-theme",
             "output-save",
         ],
+        "asset_path": ".claude/skills/plotnine-grammar-of-graphics/assets/fewshots/scatter_with_trend.png",
         "code": """from plotnine import *
 from plotnine.data import mtcars
 import pandas as pd
@@ -40,6 +41,7 @@ p.save('output.png', dpi=150, width=8, height=6)
             "layer-labels-theme",
             "output-save",
         ],
+        "asset_path": ".claude/skills/plotnine-grammar-of-graphics/assets/fewshots/bar_with_percent_labels.png",
         "code": """from plotnine import *
 from plotnine.data import mtcars
 import pandas as pd
@@ -73,6 +75,7 @@ p.save('output.png', dpi=150, width=8, height=6)
             "layer-labels-theme",
             "output-save",
         ],
+        "asset_path": ".claude/skills/plotnine-grammar-of-graphics/assets/fewshots/faceted_histogram.png",
         "code": """from plotnine import *
 import pandas as pd
 
@@ -98,8 +101,8 @@ def format_few_shot_examples() -> str:
             f"Example: {ex['name']}\n"
             f"Prompt: {ex['prompt']}\n"
             f"Graph path: {ex['graph_path']}\n"
+            f"Rendered asset: {ex['asset_path']}\n"
             f"Rubric notes: {ex['rubric_notes']}\n"
             f"Code:\n```python\n{ex['code']}```"
         )
     return "\n\n".join(blocks)
-

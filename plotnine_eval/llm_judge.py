@@ -18,6 +18,7 @@ Score 0.0 to 1.0 using:
 - Plotnine-specific correctness: columns are quoted in aes(), categorical numeric variables use factor(...), stat labels use after_stat(...) and format_string, and the code is runnable.
 - Evidence from deterministic checks: use these checks as supporting evidence, but do not let token presence alone override the actual task.
 - For image judging: verify that the rendered chart visually matches the requested primitive, encodings, labels, and layout.
+- Project fit: prefer compact, instructional, graph-aware, Posit-flavored code that supports reusable agent behavior and measurable eval feedback.
 
 Return only JSON:
 {
@@ -44,7 +45,7 @@ def _json_from_text(text: str) -> dict:
         return {"score": 0.0, "passed": False, "reasoning": f"Judge returned non-JSON: {text[:300]}"}
 
 
-def judge_code(prompt: str, code: str, graph_nodes: list[str], check_summary: list[dict]) -> dict:
+def judge_code(prompt: str, code: str, graph_nodes: list[str], check_summary: list[dict], project_profile: str = "") -> dict:
     require_judge_key()
     client = anthropic.Anthropic()
     response = client.messages.create(
@@ -61,6 +62,7 @@ def judge_code(prompt: str, code: str, graph_nodes: list[str], check_summary: li
                     "Evaluate whether this generated Plotnine code satisfies the prompt and the active "
                     "grammar graph nodes.\n\n"
                     f"Prompt:\n{prompt}\n\n"
+                    f"Project profile:\n{project_profile}\n\n"
                     f"Active graph nodes:\n{graph_nodes}\n\n"
                     f"Deterministic checks:\n{json.dumps(check_summary, indent=2)}\n\n"
                     f"Generated code:\n```python\n{code}\n```"
@@ -71,7 +73,7 @@ def judge_code(prompt: str, code: str, graph_nodes: list[str], check_summary: li
     return _json_from_text(response.content[0].text)
 
 
-def judge_image(prompt: str, image_path: str | Path, graph_nodes: list[str]) -> dict:
+def judge_image(prompt: str, image_path: str | Path, graph_nodes: list[str], project_profile: str = "") -> dict:
     require_judge_key()
     path = Path(image_path)
     image_b64 = base64.b64encode(path.read_bytes()).decode("ascii")
@@ -91,7 +93,7 @@ def judge_image(prompt: str, image_path: str | Path, graph_nodes: list[str]) -> 
                         "type": "text",
                         "text": (
                             "Evaluate whether this chart image visually satisfies the prompt and active grammar "
-                            f"nodes.\n\nPrompt:\n{prompt}\n\nActive graph nodes:\n{graph_nodes}"
+                            f"nodes.\n\nPrompt:\n{prompt}\n\nProject profile:\n{project_profile}\n\nActive graph nodes:\n{graph_nodes}"
                         ),
                     },
                     {

@@ -26,6 +26,7 @@ class GeneratePlotnineCode(dspy.Signature):
 
     task_prompt: str = dspy.InputField(desc="Natural-language chart request.")
     graph_context: str = dspy.InputField(desc="Active grammar-of-graphics graph context for this request.")
+    project_profile: str = dspy.InputField(desc="User/project purpose, aesthetic, and optimization criteria.")
     few_shot_examples: str = dspy.InputField(desc="Few-shot examples showing high-quality Plotnine code.")
     rubric: str = dspy.InputField(desc="Evaluation rubric used by the LLM judge.")
     code: str = dspy.OutputField(desc="Only complete runnable Python code. No markdown fences.")
@@ -35,10 +36,11 @@ class PlotnineCodeGenerator(dspy.Module):
     def __init__(self):
         self.generate = dspy.ChainOfThought(GeneratePlotnineCode)
 
-    def forward(self, task_prompt: str, graph_context: str):
+    def forward(self, task_prompt: str, graph_context: str, project_profile: str = ""):
         return self.generate(
             task_prompt=task_prompt,
             graph_context=graph_context,
+            project_profile=project_profile,
             few_shot_examples=format_few_shot_examples(),
             rubric=PLOTNINE_RUBRIC,
         )
@@ -52,8 +54,9 @@ def make_trainset(cases, build_graph_context):
             dspy.Example(
                 task_prompt=case.prompt,
                 graph_context=context["context"],
+                project_profile="Use the repository's project profile when available.",
                 case=case,
-            ).with_inputs("task_prompt", "graph_context")
+            ).with_inputs("task_prompt", "graph_context", "project_profile")
         )
     return trainset
 

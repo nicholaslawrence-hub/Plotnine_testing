@@ -62,7 +62,7 @@ def graph_node_map(graph: dict) -> dict[str, dict]:
     return {node["id"]: node for node in graph["nodes"]}
 
 
-def build_graph_context(case_id: str, category: str, prompt: str, max_chars: int = 7000) -> dict:
+def build_graph_context(case_id: str, category: str, prompt: str, max_chars: int = 14000) -> dict:
     graph = load_graph()
     intents = infer_intents(case_id, category, prompt)
     active_nodes = traverse_graph(intents, graph)
@@ -84,4 +84,3 @@ def build_graph_context(case_id: str, category: str, prompt: str, max_chars: int
         "active_nodes": active_nodes,
         "context": text,
     }
-
