@@ -21,6 +21,7 @@ posit_project/
 |   +-- src/pipeline.py             # DSPy generator, judge, optimizer, LangSmith loader
 +-- example_datasets/               # CSV inputs used by eval cases
 +-- .claude/skills/                 # project-local agent skills
++   +-- posit-project-profile/      # user purpose, aesthetic, and optimization criteria
 ```
 
 ## Routing
@@ -31,6 +32,8 @@ Use `posit-great-tables-skills` only when the task is about the Great Tables/DSP
 
 Use `posit-eval-reporting` when the task is mainly explaining reports, writing README material, or turning eval behavior into resume/project language.
 
+Use `posit-project-profile` as a constraint for generation, judging, skill rewriting, and documentation. It captures the user's purpose and aesthetic for this repo.
+
 ## Repository Rules
 
 When working on Plotnine evals, keep the eval case, generated-code expectation, and grader checks aligned. Do not add a prompt requirement without a corresponding grader when the requirement is important.
@@ -39,3 +42,4 @@ When changing paths, remember generated Plotnine scripts run from the repository
 
 When running model-backed commands, expect API keys and network access to be required.
 
+When optimizing skills, preserve the project profile: compact examples, grammar-of-graphics reasoning, executable artifacts, measurable eval feedback, and reusable behavior for both Codex and Claude Code.

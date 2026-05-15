@@ -12,3 +12,22 @@ intent-trend -> primitive-line -> primitive-point? -> layer-aesthetic-mapping ->
 
 Prepare summary data before plotting when the prompt asks for means or grouped values.
 
+## Examples
+
+### Summarized Trend
+
+```text
+Group by Age and plot the mean Mental_Health_Score as a line chart.
+```
+
+### Trend With Markers
+
+```text
+Create a line chart of age versus mean score and overlay point markers.
+```
+
+### Multi-Series Trend
+
+```text
+Plot mean score by age with separate lines for each gender.
+```

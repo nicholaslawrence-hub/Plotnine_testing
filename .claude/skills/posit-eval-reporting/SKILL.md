@@ -69,4 +69,3 @@ Mention these when relevant:
 - malformed `cases.json` will stop Plotnine case loading,
 - the current DSPy provider/key naming should be checked before running,
 - generated plots and reports are runtime artifacts.
-

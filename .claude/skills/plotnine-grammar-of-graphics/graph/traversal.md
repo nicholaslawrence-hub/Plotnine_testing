@@ -12,6 +12,7 @@ This graph models Plotnine knowledge as connected nodes. Do not read every node 
 | `layer` | Cross-cutting layer: aesthetics, stat labels, facets, scales, labels/themes. |
 | `output` | Save/draw behavior. |
 | `grader` | Eval checks that correspond to graph nodes. |
+| `example` | Few-shot code plus rendered visual asset. |
 
 ## Edge Types
 
@@ -23,6 +24,7 @@ This graph models Plotnine knowledge as connected nodes. Do not read every node 
 | `pairs_with` | Nodes commonly appear together. |
 | `constrains` | The source controls how the target should be written. |
 | `graded_by` | The target grader should check the source behavior. |
+| `exemplified_by` | The target example shows a good concrete implementation. |
 
 ## Traversal Recipe
 
@@ -32,7 +34,8 @@ This graph models Plotnine knowledge as connected nodes. Do not read every node 
 4. Follow `requires` to `concept-ggplot-object`, `layer-aesthetic-mapping`, and `output-save`.
 5. Follow `pairs_with` for overlays such as point + smooth or boxplot + jitter.
 6. Follow `uses` for facets, scales, labels, themes, or stat-computed labels.
-7. Follow `graded_by` when editing eval cases or graders.
+7. Follow `exemplified_by` when the model needs a concrete few-shot or visual reference.
+8. Follow `graded_by` when editing eval cases or graders.
 
 ## Active Paths
 
@@ -65,4 +68,3 @@ Trend over ordered data:
 ```text
 intent-trend -> primitive-line -> primitive-point -> layer-aesthetic-mapping -> layer-labels-theme -> output-save
 ```
-

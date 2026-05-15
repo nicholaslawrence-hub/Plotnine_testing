@@ -63,4 +63,3 @@ The reference schedule emphasizes:
 - row striping,
 - official schedule-like typography and spacing,
 - source notes and clear labels.
-

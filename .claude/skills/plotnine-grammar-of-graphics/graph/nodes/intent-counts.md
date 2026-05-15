@@ -12,3 +12,22 @@ intent-counts -> primitive-bar -> layer-stat-computed-labels? -> primitive-text?
 
 Use `geom_bar()` for counts. Use `geom_text(..., stat='count')` with `after_stat(...)` when labels are computed from counts.
 
+## Examples
+
+### Category Counts
+
+```text
+Create a bar chart showing the count of cars for each cylinder count.
+```
+
+### Counts With Fill
+
+```text
+Make a filled bar chart of car counts by cyl, treating cyl as a categorical variable.
+```
+
+### Percentage Labels
+
+```text
+Show counts by cylinder and add percentage labels above each bar.
+```

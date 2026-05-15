@@ -15,3 +15,22 @@ Channels:
 x, y, color, fill, group, alpha, size, shape, linetype, label
 ```
 
+## Examples
+
+### Numeric X/Y Mapping
+
+```python
+ggplot(df, aes(x='hp', y='mpg')) + geom_point()
+```
+
+### Categorical Numeric Mapping
+
+```python
+ggplot(df, aes(x='factor(cyl)', fill='factor(cyl)')) + geom_bar()
+```
+
+### Constant Outside Aes
+
+```python
+ggplot(summary_df, aes(x='Age', y='Mental_Health_Score')) + geom_line(color='steelblue')
+```

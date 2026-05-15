@@ -12,3 +12,22 @@ intent-group-comparison -> primitive-boxplot -> primitive-jitter? -> layer-aesth
 
 Map the group to categorical `x`, often with `factor(...)`, and the measured value to `y`.
 
+## Examples
+
+### Boxplot Comparison
+
+```text
+Compare mpg across cylinder counts with a boxplot.
+```
+
+### Grouped Distribution
+
+```text
+Show the distribution of mpg grouped by cyl, treating cyl as categorical.
+```
+
+### Boxplot With Points
+
+```text
+Create a boxplot of mpg by cylinder count and overlay jittered individual points.
+```
